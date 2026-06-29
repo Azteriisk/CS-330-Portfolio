@@ -6,7 +6,7 @@
 ---
 
 ## 1. Scene Overview & Design Proposal
-The goal of this project is to replicate a modern, minimalist desktop workspace in a fully realized 3D scene. Replicating a workspace represents an exceptional graphics development challenge because it incorporates a diverse blend of primitive geometries (planes, boxes, cylinders, and tori) arranged in a structured layout. 
+The goal of this project is to replicate a modern, minimalist desktop workspace in a fully realized 3D scene. Replicating a workspace is a good graphics development challenge in my opinion because it incorporates a diverse blend of primitive geometries (planes, boxes, cylinders, and tori) arranged in a structured layout. 
 
 The objects chosen for replication include:
 - **The Desk (Plane)**: Serves as the ground surface and boundary for the objects.
