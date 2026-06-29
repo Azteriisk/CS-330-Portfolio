@@ -34,10 +34,10 @@ All rendering is performed using the **Phong Shading Model**, implemented in the
 #### Object Materials Configuration
 The application defines a custom struct for object materials. Key material characteristics include:
 *   **Stainless Steel (Mug)**: High specularity, low diffuse absorption, and a moderate shininess rating to simulate brushed metal.
-*   **Glass (Marble Ball)**: High shininess ($85.0$), high specularity, and soft ambient strength.
-*   **Wood (Desk)**: Low shininess ($0.3$), low specularity, and strong diffuse response.
-*   **Tile (Coaster)**: High shininess ($25.0$) with specular highlights.
-*   **Clay (Notebook & Pencil Tip)**: Matte finish with extremely low specularity ($0.3$ - $0.5$).
+*   **Glass (Marble Ball)**: High shininess (85.0), high specularity, and soft ambient strength.
+*   **Wood (Desk)**: Low shininess (0.3), low specularity, and strong diffuse response.
+*   **Tile (Coaster)**: High shininess (25.0) with specular highlights.
+*   **Clay (Notebook & Pencil Tip)**: Matte finish with extremely low specularity (0.3 - 0.5).
 *   **Gold (Pencil Body)**: Balanced metallic yellow/gold color coefficients with high reflectivity.
 
 ### 3. Triple Light Source Setup
@@ -48,16 +48,23 @@ To achieve depth, color contrast, and realism, the scene utilizes a three-point 
 
 ### 4. Planar Shadow Projections
 To render shadows dynamically without the overhead of shadow maps, the project implements a **parallel projection shadow matrix**.
-*   **Shadow Matrix Formulation**: The shadow matrix projects the vertices of each model along the key light's direction vector onto the flat desk plane ($y = 0.0$).
-    $$\text{shadowMat} = \begin{bmatrix} 1.0 & 0.0 & 0.0 & 0.0 \\ -l_x/l_y & 0.0 & -l_z/l_y & 0.0 \\ 0.0 & 0.0 & 1.0 & 0.0 \\ 0.0 & 0.0 & 0.0 & 1.0 \end{bmatrix}$$
-*   **Z-Fighting Mitigation**: To prevent the projected shadow geometry from clipping through the desk geometry (which causes flickering artifacts), the shadow coordinate is offset slightly upward by translating it by $y = 0.005$.
+*   **Shadow Matrix Formulation**: The shadow matrix projects the vertices of each model along the key light's direction vector ($L = (l_x, l_y, l_z)$) onto the flat desk plane ($y = 0.0$). The projection is defined by the matrix:
+    ```
+    shadowMat = [
+      1.0       0.0   0.0       0.0
+     -lx / ly   0.0  -lz / ly   0.0
+      0.0       0.0   1.0       0.0
+      0.0       0.0   0.0       1.0
+    ]
+    ```
+*   **Z-Fighting Mitigation**: To prevent the projected shadow geometry from clipping through the desk geometry (which causes flickering artifacts), the shadow coordinate is offset slightly upward by translating it by y = 0.005.
 *   **Depth Testing Bypass**: Depth testing is temporarily disabled (`glDisable(GL_DEPTH_TEST)`) while drawing the semi-transparent black shadow overlays (45% opacity) and re-enabled immediately after to ensure shadow geometry renders cleanly without depth-sorting errors.
 
 ### 5. 3D Flight Camera and View Projections
 The camera system allows the user to explore the scene with full six-degrees-of-freedom flight camera physics:
 *   **WASD Translation**: `W` (forward), `S` (backward), `A` (left), and `D` (right) move the camera along the local camera axes.
 *   **QE Vertical Control**: `Q` moves the camera straight up, and `E` moves it straight down.
-*   **Mouse Look (Pitch & Yaw)**: Moving the mouse rotates the camera. Pitch (looking up/down) is capped at $-89.0^\circ$ to $89.0^\circ$ to prevent gimbal lock.
+*   **Mouse Look (Pitch & Yaw)**: Moving the mouse rotates the camera. Pitch (looking up/down) is capped at -89.0 to 89.0 degrees to prevent gimbal lock.
 *   **Mouse Scroll Speed Controller**: Scrolling the mouse wheel increases or decreases the translation speed multiplier of the camera.
 *   **Projection Toggle**:
     *   Pressing **`P`** activates **Perspective Projection** (calculating the 3D depth perspective matrix with a dynamic Field of View).
@@ -77,7 +84,7 @@ The Module 8 assignment demonstrates legacy OpenGL 2.0 graphics, basic physics, 
     *   *Destructible Bricks (Green/Yellow/Red)*: Multi-hit targets positioned at the top in rows. Each destructible brick has a durability of 3 hits. They change color based on their health (Green for 3 hits, Yellow for 2 hits, Red for 1 hit) and display dynamic crack overlays as they take damage before being removed (`OFF`).
     *   *Player Paddle (Gray)*: A dynamic reflector controlled by the user. Bounces are calculated based on where the ball strikes the paddle relative to its center, allowing the user to direct the angle of rebound.
 *   **Advanced Physics & Collision Systems**:
-    *   *Ball-to-Brick Collisions*: Resolves overlap by pushing the ball outside the brick's boundary and reflects the velocity vector mathematically ($V' = V - 2 \cdot (V \cdot N) \cdot N$) upon hitting a surface.
+    *   *Ball-to-Brick Collisions*: Resolves overlap by pushing the ball outside the brick's boundary and reflects the velocity vector mathematically (`V' = V - 2 * dot(V, N) * N`) upon hitting a surface.
     *   *Ball-to-Ball Elastic Collisions*: Simulates real-time momentum exchange between active balls. Resolves overlaps and performs elastic collision bounces, updating colors on impact.
     *   *Boundary Cleanup*: Any ball that falls past the bottom boundary (missed by the paddle) is automatically erased from the simulation to manage memory.
 
@@ -89,21 +96,17 @@ The Module 8 assignment demonstrates legacy OpenGL 2.0 graphics, basic physics, 
 *   **Operating System**: Windows 10/11
 *   **IDE**: Microsoft Visual Studio 2022
 *   **C++ Compiler**: MSVC (C++17 or later recommended)
-*   **Required Libraries**:
+*   **Required Libraries** (All included locally in the project):
     *   **GLFW** (Windowing and Input events handling)
     *   **GLEW** (OpenGL extension loading)
     *   **GLM** (OpenGL Mathematics for vectors and matrices)
     *   **stb_image.h** (Single-header library for texture loading)
 
 ### Setup in Visual Studio
-1.  Open the Visual Studio Solution file (`.sln`) for the desired project (e.g., [7-1_FinalProjectMilestones.sln](file:///c:/Users/thera/Documents/SNHU/CS-330/CS330Content/Projects/7-1_FinalProjectMilestones/7-1_FinalProjectMilestones.sln)).
-2.  Ensure that the project configurations are set to **Debug** or **Release** and targeted to the **x64** platform.
-3.  Ensure the Include Directories and Library Directories are pointed correctly to the `Libraries` folder within `CS330Content`:
-    *   *Additional Include Directories*: `$(SolutionDir)..\..\Libraries\includes`
-    *   *Additional Library Directories*: `$(SolutionDir)..\..\Libraries\lib`
-    *   *Linker Input Dependencies*: Add `opengl32.lib`, `glfw3.lib`, and `glew32s.lib` (or `glew32.lib`).
-4.  Copy the `glew32.dll` to the directory containing the compiled executable (`Debug` or `Release` directory) if dynamic linking is used.
-5.  Build the solution (`Ctrl + Shift + B`) and run the application (`F5`).
+1.  Open the Visual Studio Solution file (`.sln`) for the desired project (e.g., [3D_Scene.sln](file:///c:/Users/thera/Documents/SNHU/CS-330/CS-330-Portfolio/3D_Scene/3D_Scene.sln) or [2D_Simulation.sln](file:///c:/Users/thera/Documents/SNHU/CS-330/CS-330-Portfolio/2D_Simulation/2D_Simulation.sln)).
+2.  Ensure that the configuration is set to **Debug** or **Release** and targeted to the **Win32** (x86) platform for the 3D Scene.
+3.  The project is pre-configured to be fully self-contained using relative paths to the local `Libraries` folder, so no manual include or library directory setups are required.
+4.  Build the solution (`Ctrl + Shift + B`) and run the application (`F5`).
 
 ---
 
@@ -114,7 +117,7 @@ Designing a 3D scene starts with an analysis of reference material. I break down
 After establishing the geometry, I organize the transformation hierarchy:
 1.  **Scaling**: Sizing primitives relative to each other so objects maintain realistic proportions.
 2.  **Rotation**: Aligning meshes (e.g., tipping a cone horizontally to form a pencil tip or flipping a half-torus upright for a mug handle).
-3.  **Translation**: Placing the objects at coordinate offsets ($X, Y, Z$) relative to the center origin.
+3.  **Translation**: Placing the objects at coordinate offsets (X, Y, Z) relative to the center origin.
 
 Next, I select texture maps with appropriate resolutions (1024x1024 or higher) to avoid pixelation and define material properties to determine light interactions. Highly specular textures represent metals and glass, while rough, matte textures are used for wood and clay.
 
@@ -128,7 +131,7 @@ The camera system uses a first-person fly camera paradigm:
 ### 3. Explain the custom functions in your program that promote modularity.
 The project isolates rendering and window management into dedicated classes, exposing clean APIs:
 *   `CreateGLTexture(const char* filename, std::string tag)`: Standardizes image loading, binds the texture unit, defines filtering parameters (`GL_LINEAR`), sets coordinate wrapping (`GL_REPEAT`), and generates mipmaps. The loaded texture is stored in a map-like structure with an associated string `tag` for easy referencing.
-*   `SetTransformations(glm::vec3 scaleXYZ, float Xrot, float Yrot, float Zrot, glm::vec3 pos)`: Encapsulates matrix algebra. It creates the model matrix ($M = T \times R_x \times R_y \times R_z \times S$), and sends it directly to the active GLSL shader program.
+*   `SetTransformations(glm::vec3 scaleXYZ, float Xrot, float Yrot, float Zrot, glm::vec3 pos)`: Encapsulates matrix algebra. It creates the model matrix (`M = Translation * RotationX * RotationY * RotationZ * Scale`), and sends it directly to the active GLSL shader program.
 *   `SetupSceneLights()`: Configures light uniforms in the shader, passing arrays of struct variables containing positions, diffuse colors, and specular parameters.
 *   `ProcessKeyboardEvents()` & `Mouse_Position_Callback()`: Isolate user inputs from the main loop, updating camera coordinates using delta time to ensure consistent camera speeds regardless of system framerates.
 
