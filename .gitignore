@@ -1,0 +1,27 @@
+# Visual Studio build outputs and temp files
+.vs/
+Debug/
+Release/
+x64/
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.sdf
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.db
+
+# Intermediate and build log files
+*.obj
+*.ilk
+*.pdb
+*.tlog
+*.lastbuildstate
+*.idb
+*.recipe
+*.log
+*.exe
+vcpkg.applocal.log

@@ -67,14 +67,19 @@ The camera system allows the user to explore the scene with full six-degrees-of-
 
 ## Project 2: 2D Interactive Physics Simulation (Module 8)
 
-The Module 8 assignment demonstrates legacy OpenGL 2.0 graphics, basic physics, and dynamic collision handling.
+The Module 8 assignment demonstrates legacy OpenGL 2.0 graphics, basic physics, dynamic collision handling, and interactive player input.
 
 ### Key Features
-*   **Dynamic Spawn Engine**: Pressing the `Spacebar` instantiates a new ball entity at the origin `(0.0, 0.0)` with a randomized RGB color and a randomized initial heading vector.
-*   **Brick Classification**:
-    *   *Reflective Bricks (Yellow/Orange)*: Behave as static physical boundaries. When a ball overlaps with them, it rebounds in a new random direction.
-    *   *Destructible Bricks (Green/Cyan)*: Act as breakable targets. Upon collision, the brick's visibility flag is toggled to `OFF`, and it is removed from the active simulation space.
-*   **Collision System**: Uses Axis-Aligned Bounding Box (AABB) checking to detect overlapping boundaries between circular ball coordinates and rectangular brick bounds.
+*   **Dynamic Spawn Engine (Debounced)**: Pressing the `Spacebar` instantiates a new ball entity at `(0.0, -0.5)` moving upwards at a random angle (between 45 and 135 degrees) with randomized RGB colors. The input is debounced to ensure only one ball spawns per press.
+*   **Interactive Player Paddle**: Added a keyboard-controlled paddle at the bottom of the screen (moves left and right using `A`/`D` or the Left/Right Arrow keys). The paddle is bounded to prevent leaving the screen.
+*   **Brick Classification & State Machine**:
+    *   *Reflective Bumpers (Blue/Gray)*: Static boundaries placed on the sides to redirect balls upon collision.
+    *   *Destructible Bricks (Green/Yellow/Red)*: Multi-hit targets positioned at the top in rows. Each destructible brick has a durability of 3 hits. They change color based on their health (Green for 3 hits, Yellow for 2 hits, Red for 1 hit) and display dynamic crack overlays as they take damage before being removed (`OFF`).
+    *   *Player Paddle (Gray)*: A dynamic reflector controlled by the user. Bounces are calculated based on where the ball strikes the paddle relative to its center, allowing the user to direct the angle of rebound.
+*   **Advanced Physics & Collision Systems**:
+    *   *Ball-to-Brick Collisions*: Resolves overlap by pushing the ball outside the brick's boundary and reflects the velocity vector mathematically ($V' = V - 2 \cdot (V \cdot N) \cdot N$) upon hitting a surface.
+    *   *Ball-to-Ball Elastic Collisions*: Simulates real-time momentum exchange between active balls. Resolves overlaps and performs elastic collision bounces, updating colors on impact.
+    *   *Boundary Cleanup*: Any ball that falls past the bottom boundary (missed by the paddle) is automatically erased from the simulation to manage memory.
 
 ---
 
