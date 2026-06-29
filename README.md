@@ -110,33 +110,18 @@ The Module 8 assignment demonstrates legacy OpenGL 2.0 graphics, basic physics, 
 
 ---
 
-## SNHU CS-330 Reflections
+## SNHU CS-330 Reflections (Portfolio Journal)
 
-### 1. How do you approach designing 3D scenes?
-Designing a 3D scene starts with an analysis of reference material. I break down real-world elements into basic geometric shapes (primitives). For example, a coffee mug is simplified into a cylinder for the liquid container and a torus for the handle. 
-After establishing the geometry, I organize the transformation hierarchy:
-1.  **Scaling**: Sizing primitives relative to each other so objects maintain realistic proportions.
-2.  **Rotation**: Aligning meshes (e.g., tipping a cone horizontally to form a pencil tip or flipping a half-torus upright for a mug handle).
-3.  **Translation**: Placing the objects at coordinate offsets (X, Y, Z) relative to the center origin.
+### 1. How do I approach designing software?
+- **New Design Skills Crafted**: Working on these graphics projects helped me build advanced spatial decomposition skills. Instead of treating a complex 3D object as a single mesh, I learned to break it down into compound primitive geometries (such as a cylinder body and a torus handle for a mug, or a cylinder shaft and conical tip for a pencil). Additionally, it enhanced my ability to design object-oriented graphics systems with clean separation of concerns, dividing tasks among specialized components like `ViewManager`, `SceneManager`, and `ShaderManager`.
+- **Design Process Followed**: I followed a structured, iterative design process. I began by analyzing 2D reference images, identifying and scaling geometric primitives, defining relative translation and rotation offsets, and establishing a transformation hierarchy (Scale $\rightarrow$ Rotate $\rightarrow$ Translate). I then designed Phong illumination models (ambient, diffuse, and specular light behaviors) and aligned texture maps using appropriate filtering and wrapping parameters.
+- **Applying Tactics in Future Work**: Decomposing complex requirements into small, modular primitives is directly applicable to general software architecture. Breaking large software programs into independent, single-responsibility units makes them more maintainable, easier to test, and simpler to refactor.
 
-Next, I select texture maps with appropriate resolutions (1024x1024 or higher) to avoid pixelation and define material properties to determine light interactions. Highly specular textures represent metals and glass, while rough, matte textures are used for wood and clay.
+### 2. How do I approach developing programs?
+- **New Development Strategies**: I utilized incremental implementation and proactive debugging strategies. I tested each 3D primitive individually to verify geometry and texture coordinates before layering lighting variables or planar shadows. I also implemented static type verification to resolve compiler type-truncation and comparison warnings, ensuring clean code execution.
+- **Role of Iteration in Development**: Iteration was vital in refining the physics and visuals. For example, rendering realistic shadows required multiple test-and-adjust cycles to tweak translation offsets ($y = 0.005$) and prevent z-fighting clipping. Similarly, the 2D physics simulation evolved iteratively from simple discrete movements to continuous velocity calculations and elastic ball-to-ball momentum exchanges.
+- **Evolution of Coding Approach**: Throughout the milestones, my coding approach evolved from writing tightly coupled monolithic code to producing modular, decoupled structures. Abstracting the camera physics and window events into dedicated classes simplified the main game loop and established a professional, scaleable architecture.
 
-### 2. How can a user navigate your 3D scene?
-The camera system uses a first-person fly camera paradigm:
-*   **Movement Keys (`W`, `S`, `A`, `D`, `Q`, `E`)**: Move the camera forward, backward, left, right, up, and down.
-*   **Mouse Interaction**: Controls look orientation (yaw and pitch). The mouse movement calculates angular offsets to reorient the camera's front vector.
-*   **Mouse Scroll**: Scrolling controls the camera speed, allowing for faster navigation or slower, more precise inspections.
-*   **Projection Toggle**: The user can toggle between **Perspective View (`P`)** for immersive 3D and **Orthographic View (`O`)** for flat, technical 2D projections.
-
-### 3. Explain the custom functions in your program that promote modularity.
-The project isolates rendering and window management into dedicated classes, exposing clean APIs:
-*   `CreateGLTexture(const char* filename, std::string tag)`: Standardizes image loading, binds the texture unit, defines filtering parameters (`GL_LINEAR`), sets coordinate wrapping (`GL_REPEAT`), and generates mipmaps. The loaded texture is stored in a map-like structure with an associated string `tag` for easy referencing.
-*   `SetTransformations(glm::vec3 scaleXYZ, float Xrot, float Yrot, float Zrot, glm::vec3 pos)`: Encapsulates matrix algebra. It creates the model matrix (`M = Translation * RotationX * RotationY * RotationZ * Scale`), and sends it directly to the active GLSL shader program.
-*   `SetupSceneLights()`: Configures light uniforms in the shader, passing arrays of struct variables containing positions, diffuse colors, and specular parameters.
-*   `ProcessKeyboardEvents()` & `Mouse_Position_Callback()`: Isolate user inputs from the main loop, updating camera coordinates using delta time to ensure consistent camera speeds regardless of system framerates.
-
-### 4. How has computer graphics changed your view of software development?
-Working with OpenGL has changed my perspective on software development in several ways:
-*   **Hardware and Driver Interaction**: Unlike typical high-level programming where hardware is abstracted, graphics development requires direct communication with the GPU. I must structure data in VBOs (Vertex Buffer Objects) and VAOs (Vertex Array Objects) to minimize CPU-to-GPU bandwidth bottlenecks.
-*   **High Performance and Real-Time Loop**: Game engines and graphics applications must render frames within 16.67 milliseconds to maintain 60 frames per second. This places optimization at the forefront of code design, prompting a shift toward data-oriented design.
-*   **Applied Mathematics**: Concepts in linear algebra (quaternions, dot products for diffuse light calculation, and cross products to compute camera vectors) are no longer theoretical; they are directly responsible for the visuals on the screen. Writing shader code (GLSL) highlights how hardware-parallelized programming can perform millions of vector operations per second.
+### 3. How can computer science help me in reaching my goals?
+- **Educational Pathway**: Understanding computational graphics and real-time simulations bridges the gap between high-level language abstractions and hardware-level performance. It cements concepts in linear algebra (vector math, dot products for lighting, cross products for camera vectors, and transformation matrices) that are essential for future coursework in computer graphics, game engine development, and scientific computing.
+- **Professional Pathway**: Graphics programming requires writing code optimized for strict frame-rate windows (e.g., rendering within 16.67ms for 60 FPS). This focus on resource efficiency, memory layouts, CPU-to-GPU bandwidth, and cache locality is directly transferable to high-performance software engineering, low-latency applications, and systems programming, helping me write optimized, professional software.
